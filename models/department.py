@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from typing import Any, Optional
 
@@ -6,15 +5,17 @@ from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-
 from models.employee import _datetime_to_iso
 from models.entity import Entity
 
+
 class Department(Entity):
     __tablename__ = "department"
-    __abstract__=False
-    
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
+    __abstract__ = False
+
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True, index=True
+    )
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -44,6 +45,4 @@ class Department(Entity):
             "created_at": _datetime_to_iso(self.created_at),
             "updated_at": _datetime_to_iso(self.updated_at),
             "deleted_at": _datetime_to_iso(self.deleted_at),
-    }
-
-    
+        }

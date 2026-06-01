@@ -1,8 +1,3 @@
-
-
-
-from typing import List
-
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -12,7 +7,7 @@ from models.entity import Entity
 
 class Address(Entity):
     __tablename__ = "address"
-    __abstract__=False
+    __abstract__ = False
 
     line1: Mapped[str] = mapped_column(String(100), nullable=False)
     city: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -25,5 +20,3 @@ class Address(Entity):
         index=True,
     )
     employee: Mapped["Employee"] = relationship("Employee", back_populates="addresses")
-
-

@@ -1,18 +1,9 @@
-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 import logging
-from fastapi.responses import JSONResponse
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.connection import get_db
 from dataclasses import dataclass
-from typing import TypedDict
 
-from exceptions import NotFoundException
 from exceptions.handler import register_exception_handlers
-from models.employee import Employee as DBEmployee
 from middleware.logger import RequestLoggingMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -60,23 +51,28 @@ _next_id: int = 1
 
 register_exception_handlers(app)
 
+
 def get_next_id() -> int:
     global _next_id
     current_id = _next_id
     _next_id += 1
     return current_id
 
+
 @dataclass
 class EmployeeCreate:
-    name:str
+    name: str
     age: int
-    designation:str
+    designation: str
+
 
 # Note: ORM model is `DBEmployee` from models.employee; keep local API types minimal
 
-@app.get("/",tags=["Root"])
+
+@app.get("/", tags=["Root"])
 def root():
     return {"message": "WELCOME TO EMPLOYEE CRUD API"}
+
 
 @app.get("/health", tags=["Health"])
 def health_check():
@@ -114,12 +110,12 @@ def health_check():
 #     db_employee = result.first()
 #     if not db_employee:
 #         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Employee {employee_id} not found")
-    
+
 #     if "name" in body and isinstance(body["name"], str) and body["name"].strip():
 #         db_employee.name = body["name"].strip()
 #     if "email" in body and isinstance(body["email"], str) and body["email"].strip():
 #         db_employee.email = body["email"].strip()
-    
+
 #     try:
 #         await db.commit()
 #     except IntegrityError:
@@ -151,12 +147,6 @@ def health_check():
 #         await db.rollback()
 #         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to delete employee")
 #     return {"message": f"Employee {id} marked as deleted."}
-    
-
-
-
-    
-
 
 
 # @app.put("/employee/{employee_id}", tags=["Employees"])
@@ -182,10 +172,7 @@ def health_check():
 #     return {"message": f"Employee with id {employee_id} marked as deleted."}
 
 
-
-
-
-
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

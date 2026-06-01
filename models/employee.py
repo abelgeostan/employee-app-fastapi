@@ -19,17 +19,21 @@ def _datetime_to_iso(value: datetime | None) -> str | None:
         return None
     return value.isoformat()
 
+
 class EmployeeRole(str, enum.Enum):
     UI = "UI"
     UX = "UX"
-    DEVELOPER="Developer"
+    DEVELOPER = "Developer"
     HR = "HR"
+
 
 class Employee(Entity):
     __tablename__ = "employees"
-    __abstract__=False
+    __abstract__ = False
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True, index=True
+    )
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     age: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -46,7 +50,9 @@ class Employee(Entity):
         onupdate=func.now(),
         nullable=True,
     )
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     addresses: Mapped[list["Address"]] = relationship(
         "Address",
@@ -60,7 +66,11 @@ class Employee(Entity):
     )
 
     role: Mapped[EmployeeRole] = mapped_column(
-        Enum(EmployeeRole, name="employeerole",values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        Enum(
+            EmployeeRole,
+            name="employeerole",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
         nullable=False,
         server_default=EmployeeRole.DEVELOPER.value,
     )

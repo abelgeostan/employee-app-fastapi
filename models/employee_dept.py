@@ -1,6 +1,3 @@
-
-
-
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -22,4 +19,3 @@ class employee_dept(Base):
         nullable=False,
         primary_key=True,
     )
-    

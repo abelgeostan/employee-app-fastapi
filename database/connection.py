@@ -13,8 +13,6 @@ thread-pool worker.
 # from config import DATABASE_URL
 
 
-
-
 # class Base(DeclarativeBase):
 #     """Base class for ORM mapped classes (entities)."""
 
@@ -53,6 +51,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """One AsyncSession per request; closed after the request."""
     async with AsyncSessionLocal() as session:
         yield session
+
 
 # async def create_tables() -> None:
 #     """Create tables for all ORM models that inherit from Base."""
