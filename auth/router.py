@@ -9,7 +9,8 @@ from auth.schemas import LoginRequest, TokenResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.connection import get_db
-
+import logging
+logger=logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -20,6 +21,7 @@ async def login(form:OAuth2PasswordRequestForm=Depends(), db: AsyncSession = Dep
     # return TokenResponse(access_token=token, refresh_token=refresh_token)
     token=await service.login(db,form.username,form.password)
     # refresh_token=await service.create_refresh_token(db, form.username)
+    logger.info(f"USER {form.username} logged in successfully")
     return TokenResponse(access_token=token, refresh_token=token)
 """fix this issue, id attrib not found error on create refresh token"""
 

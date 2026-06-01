@@ -12,6 +12,9 @@ from exceptions import AppException, ConflictException
 from models.address import Address
 from models.employee import Employee
 from sqlalchemy.exc import IntegrityError
+import logging
+logger=logging.getLogger(__name__)
+
 
 async def create(db:AsyncSession, employee:Employee)->Employee:
     
@@ -22,6 +25,8 @@ async def create(db:AsyncSession, employee:Employee)->Employee:
         await db.rollback()
         raise ConflictException( detail=f"Email '{employee.email.strip()}' is already in use")
     await db.refresh(employee,["addresses","departments"])
+
+    
     
     return employee
 
