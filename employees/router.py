@@ -39,7 +39,11 @@ async def get_all_employees(
     return result
 
 
-@router.put("/{id}", dependencies=[Depends(require_role(EmployeeRole.HR))])
+@router.put(
+    "/{id}",
+    dependencies=[Depends(require_role(EmployeeRole.HR))],
+    response_model=EmployeeResponse,
+)
 async def update_employee(
     id: int, body: EmployeeUpdate, db: AsyncSession = Depends(get_db)
 ):
@@ -53,7 +57,7 @@ async def delete_by_id(id: int, db: AsyncSession = Depends(get_db)):
     return {"message": f"Employee {id} ({employee.name}) marked as deleted."}
 
 
-@router.get("/search")
+@router.get("/search", response_model=list[EmployeeResponse])
 async def search_employees(
     name: str | None = None,
     db: AsyncSession = Depends(get_db),
@@ -73,7 +77,11 @@ async def get_by_id(
     return employee
 
 
-@router.post("/{emp_id}/departments/{dept_id}")
+@router.post(
+    "/{emp_id}/departments/{dept_id}",
+    response_model=EmployeeResponse,
+    dependencies=[Depends(require_role(EmployeeRole.HR))],
+)
 async def attach_department_to_employee(
     emp_id: int,
     dept_id: int,
@@ -84,7 +92,11 @@ async def attach_department_to_employee(
     return employee
 
 
-@router.delete("/{emp_id}/departments/{dept_id}")
+@router.delete(
+    "/{emp_id}/departments/{dept_id}",
+    response_model=EmployeeByIdResponse,
+    dependencies=[Depends(require_role(EmployeeRole.HR))],
+)
 async def detach_department_from_employee(
     emp_id: int,
     dept_id: int,
@@ -95,7 +107,11 @@ async def detach_department_from_employee(
     return employee
 
 
-@router.delete("/{emp_id}/adresses/{addr_id}", response_model=AddressResponse)
+@router.delete(
+    "/{emp_id}/adresses/{addr_id}",
+    response_model=AddressResponse,
+    dependencies=[Depends(require_role(EmployeeRole.HR))],
+)
 async def delete_address(
     emp_id: int,
     addr_id: int,

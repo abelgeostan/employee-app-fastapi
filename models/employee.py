@@ -6,7 +6,7 @@ import enum
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, Enum, Integer, String, func
+from sqlalchemy import Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 # from models.address import Address
@@ -39,20 +39,20 @@ class Employee(Entity):
     age: Mapped[int] = mapped_column(Integer, nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False,
-    )
-    updated_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=True,
-    )
-    deleted_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    # created_at: Mapped[datetime] = mapped_column(
+    #     DateTime(timezone=True),
+    #     server_default=func.now(),
+    #     nullable=False,
+    # )
+    # updated_at: Mapped[datetime | None] = mapped_column(
+    #     DateTime(timezone=True),
+    #     server_default=func.now(),
+    #     onupdate=func.now(),
+    #     nullable=True,
+    # )
+    # deleted_at: Mapped[datetime | None] = mapped_column(
+    #     DateTime(timezone=True), nullable=True
+    # )
 
     addresses: Mapped[list["Address"]] = relationship(  # noqa: F821, UP037
         "Address",

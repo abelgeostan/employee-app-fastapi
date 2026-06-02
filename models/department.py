@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, Integer, String, func
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.employee import _datetime_to_iso
@@ -16,20 +15,20 @@ class Department(Entity):
         Integer, primary_key=True, autoincrement=True, index=True
     )
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False,
-    )
-    updated_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=True,
-    )
-    deleted_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True, default=None
-    )
+    # created_at: Mapped[datetime] = mapped_column(
+    #     DateTime(timezone=True),
+    #     server_default=func.now(),
+    #     nullable=False,
+    # )
+    # updated_at: Mapped[datetime | None] = mapped_column(
+    #     DateTime(timezone=True),
+    #     server_default=func.now(),
+    #     onupdate=func.now(),
+    #     nullable=True,
+    # )
+    # deleted_at: Mapped[datetime | None] = mapped_column(
+    #     DateTime(timezone=True), nullable=True, default=None
+    # )
 
     employees: Mapped[list["Employee"]] = relationship(  # noqa: F821, UP037
         "Employee",

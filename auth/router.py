@@ -27,3 +27,11 @@ async def login(
 
 
 """fix this issue, id attrib not found error on create refresh token"""
+
+
+@router.post("/refresh", response_model=TokenResponse)
+async def refresh(refresh_token: str, db: AsyncSession = Depends(get_db)):
+    payload = await service.verify_refresh_token(refresh_token)
+
+    token = await service.create_refresh_access_token(payload, db)
+    return TokenResponse(access_token=token, refresh_token=refresh_token)

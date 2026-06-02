@@ -53,7 +53,7 @@ async def get_all(db: AsyncSession):
 
 async def update(db: AsyncSession, id: int, body: EmployeeUpdate):
     db_employee = await repo.get_by_id(db, id)
-    if not db_employee:
+    if not db_employee or db_employee.deleted_at is not None:
         raise NotFoundException(detail=f"Employee {id} not found")
 
     if body.name is not None and body.name.strip():
@@ -71,7 +71,7 @@ async def update(db: AsyncSession, id: int, body: EmployeeUpdate):
 
 async def delete(db: AsyncSession, id: int):
     db_employee = await repo.get_by_id(db, id)
-    if not db_employee:
+    if not db_employee or db_employee.deleted_at is not None:
         raise NotFoundException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Employee {id} not found"
         )
@@ -83,18 +83,18 @@ async def delete(db: AsyncSession, id: int):
 async def get_by_id(db: AsyncSession, id: int):
 
     employee = await repo.get_by_id(db, id)
-    if employee is None:
-        raise NotFoundException("Employee not found")
+    if employee is None or employee.deleted_at is not None:
+        raise NotFoundException(detail=f"Employee {id} not found")
     return employee
 
 
 async def attach_department(db: AsyncSession, emp_id: int, dept_id: int):
     employee = await repo.get_by_id(db, emp_id)
-    if not employee:
+    if not employee or employee.deleted_at is not None:
         raise NotFoundException(detail=f"Employee {emp_id} not found")
 
     department = await deptrepo.get_by_id(db, dept_id)
-    if not department:
+    if not department or department.deleted_at is not None:
         raise NotFoundException(detail=f"Department {dept_id} not found")
 
     if department not in employee.departments:
@@ -106,16 +106,18 @@ async def attach_department(db: AsyncSession, emp_id: int, dept_id: int):
 
 async def detach_department(db: AsyncSession, emp_id: int, dept_id: int):
     employee = await repo.get_by_id(db, emp_id)
-    if not employee:
+    if not employee or employee.deleted_at is not None:
         raise NotFoundException(detail=f"Employee {emp_id} not found")
 
     department = await deptrepo.get_by_id(db, dept_id)
-    if not department:
+    if not department or department.deleted_at is not None:
         raise NotFoundException(detail=f"Department {dept_id} not found")
 
     if department in employee.departments:
         employee.departments.remove(department)
         await repo.update(db, employee)
+    else:
+        raise NotFoundException(detail=f"Department {dept_id} not added to employee")
 
     return employee
 

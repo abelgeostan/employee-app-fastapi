@@ -15,9 +15,16 @@ async def get_all(db: AsyncSession):
     return result
 
 
+async def get_by_id(db: AsyncSession, id: int):
+    dept = await repo.get_by_id(db, id)
+    if not dept or dept.deleted_at is not None:
+        raise NotFoundException(detail=f"Department {id} not found")
+    return dept
+
+
 async def update(db: AsyncSession, id: int, body: DeptCreate):
     dept = await repo.get_by_id(db, id)
-    if not dept:
+    if not dept or dept.deleted_at is not None:
         raise NotFoundException(detail=f"Department {id} not found")
     if body.name is not None and body.name.strip():
         dept.name = body.name.strip()
@@ -27,7 +34,7 @@ async def update(db: AsyncSession, id: int, body: DeptCreate):
 
 async def delete(db: AsyncSession, id: int):
     dept = await repo.get_by_id(db, id)
-    if not dept:
+    if not dept or dept.deleted_at is not None:
         raise NotFoundException(detail=f"Department {id} not found")
     dept = await repo.delete(db, dept)
     return dept
