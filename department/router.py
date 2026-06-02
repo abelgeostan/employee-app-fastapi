@@ -7,7 +7,6 @@ from database.connection import get_db
 from department import service
 from department.schemas import DeptCreate
 
-
 router = APIRouter(prefix="/dept", tags=["Departments"])
 
 

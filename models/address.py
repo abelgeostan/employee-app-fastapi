@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
+# from models.employee import Employee
 from models.entity import Entity
 
 
@@ -19,4 +19,4 @@ class Address(Entity):
         nullable=False,
         index=True,
     )
-    employee: Mapped["Employee"] = relationship("Employee", back_populates="addresses")
+    employee: Mapped[Employee] = relationship("Employee", back_populates="addresses")  # noqa:F821

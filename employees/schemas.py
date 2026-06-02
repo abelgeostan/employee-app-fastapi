@@ -1,8 +1,6 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
-
 
 from models.employee import EmployeeRole
 
@@ -81,9 +79,9 @@ class EmployeeByIdResponse(EmployeeResponse):
 
 
 class EmployeeUpdate(BaseModel):
-    name: Optional[str] = None
-    email: Optional[str] = None
-    age: Optional[int] = Field(None, ge=0, le=150)
+    name: str | None = None
+    email: str | None = None
+    age: int | None = Field(None, ge=0, le=150)
 
 
 """create other schemaas and update router"""

@@ -1,10 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.utils import create_access_token, verify_password
-
-# from auth.utils import  create_refresh_token as crt_refresh_token
-from exceptions import UnauthorizedException
+from auth.utils import create_refresh_token as crt_refresh_token
 from employees import repo
+from exceptions import UnauthorizedException
 
 
 async def login(db: AsyncSession, email: str, password: str) -> str:
@@ -19,8 +18,8 @@ async def login(db: AsyncSession, email: str, password: str) -> str:
     )
 
 
-# async def create_refresh_token(db: AsyncSession, email: str)->str:
-#     employee = await repo.get_by_email(db,email)
-#     if employee is None:
-#         raise UnauthorizedException("Invalid email or password")
-#     return crt_refresh_token({"id":employee.id, "email":employee.email})
+async def create_refresh_token(db: AsyncSession, email: str) -> str:
+    employee = await repo.get_by_email(db, email)
+    if employee is None:
+        raise UnauthorizedException("Invalid email or password")
+    return crt_refresh_token(employee.id, employee.email)

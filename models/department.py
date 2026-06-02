@@ -1,9 +1,8 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 
 from models.employee import _datetime_to_iso
 from models.entity import Entity
@@ -22,17 +21,17 @@ class Department(Entity):
         server_default=func.now(),
         nullable=False,
     )
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
+    updated_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
         nullable=True,
     )
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+    deleted_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, default=None
     )
 
-    employees: Mapped[list["Employee"]] = relationship(
+    employees: Mapped[list[Employee]] = relationship(  # noqa:F821
         "Employee",
         secondary="employee_dept",
         back_populates="departments",

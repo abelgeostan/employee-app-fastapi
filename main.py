@@ -1,17 +1,15 @@
-from fastapi import FastAPI
 import logging
-
 from dataclasses import dataclass
 
-from exceptions.handler import register_exception_handlers
-from middleware.logger import RequestLoggingMiddleware
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from employees.router import router as employee_router
 from auth.router import router as auth_router
-from department.router import router as dept_router
-
 from config import settings
+from department.router import router as dept_router
+from employees.router import router as employee_router
+from exceptions.handler import register_exception_handlers
+from middleware.logger import RequestLoggingMiddleware
 
 logging.basicConfig(
     level=logging.INFO,

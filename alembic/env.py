@@ -5,11 +5,6 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
-
-from config import settings
-from database.connection import Base
-
 # Import every ORM module so each Table registers on Base.metadata.
 # `target_metadata` below is only as complete as these imports — a missing import
 # makes `--autogenerate` think a table should be DROPPED. This is the #1 autogenerate gotcha.
@@ -17,6 +12,9 @@ from database.connection import Base
 # import models.associations  # noqa: F401
 import models.department  # noqa: F401
 import models.employee  # noqa: F401
+from alembic import context
+from config import settings
+from database.connection import Base
 
 config = context.config
 

@@ -1,7 +1,9 @@
-from datetime import datetime, timedelta, timezone
-from config import settings
-from jose import JWTError, jwt
+from datetime import UTC, datetime, timedelta
+
 import bcrypt
+from jose import JWTError, jwt
+
+from config import settings
 
 
 def hash_password(plain: str) -> str:
@@ -14,7 +16,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = {**data, "type": "access"}
-    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expiry_minutes)
+    expire = datetime.now(UTC) + timedelta(minutes=settings.jwt_expiry_minutes)
     to_encode["exp"] = expire
     return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
@@ -28,8 +30,8 @@ def decode_access_token(token: str) -> dict | None:
         return None
 
 
-# def create_refresh_token(data: dict)->str:
-#     to_encode = {"id": data.id, "email": data.email, "type": "refresh"}
-#     expire = datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_expiry_days)
-#     to_encode["exp"]=expire
-#     return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+def create_refresh_token(id: int, email: str) -> str:
+    to_encode = {"id": id, "email": email, "type": "refresh"}
+    expire = datetime.now(UTC) + timedelta(days=settings.refresh_token_expiry_days)
+    to_encode["exp"] = expire
+    return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)

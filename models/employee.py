@@ -2,15 +2,17 @@
 Employee entity — ORM mapped class for table `employees`.
 """
 
+import enum
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from sqlalchemy import DateTime, Enum, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
-import enum
+# from models.address import Address
+# from models.department import Department
 from models.entity import Entity
+
 # from models.address import address
 
 
@@ -20,7 +22,7 @@ def _datetime_to_iso(value: datetime | None) -> str | None:
     return value.isoformat()
 
 
-class EmployeeRole(str, enum.Enum):
+class EmployeeRole(enum.StrEnum):
     UI = "UI"
     UX = "UX"
     DEVELOPER = "Developer"
@@ -44,22 +46,22 @@ class Employee(Entity):
         server_default=func.now(),
         nullable=False,
     )
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
+    updated_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
         nullable=True,
     )
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+    deleted_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
 
-    addresses: Mapped[list["Address"]] = relationship(
+    addresses: Mapped[list[Address]] = relationship(  # noqa:F821
         "Address",
         back_populates="employee",
     )
 
-    departments: Mapped[list["Department"]] = relationship(
+    departments: Mapped[list[Department]] = relationship(  # noqa:F821
         "Department",
         secondary="employee_dept",
         back_populates="employees",

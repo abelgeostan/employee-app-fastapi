@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from department import repo
 from department.schemas import DeptCreate
 from exceptions import NotFoundException

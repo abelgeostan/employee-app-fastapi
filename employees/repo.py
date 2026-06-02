@@ -1,14 +1,14 @@
+import logging
 from datetime import datetime
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from exceptions import AppException, ConflictException
 
+from exceptions import AppException, ConflictException
 from models.address import Address
 from models.employee import Employee
-from sqlalchemy.exc import IntegrityError
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -22,7 +22,7 @@ services:
           action: sync
         - path: ./uv.lock
           action: rebuild
-    command: ["uv", "run", "uvicorn", "main:app", "--port", "8000","--host","0.0.0.0", "--reload"] 
+    command: ["uv", "run", "uvicorn", "main:app", "--port", "8000","--host","0.0.0.0", "--reload"]
 
   postgres:
     image: postgres:16-alpine
@@ -41,7 +41,7 @@ services:
       timeout: 5s
       retries: 5
 
-  
+
 
 volumes:
   postgres_data:

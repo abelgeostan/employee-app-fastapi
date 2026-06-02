@@ -3,10 +3,8 @@ from fastapi.security import OAuth2PasswordBearer
 
 from auth.schemas import TokenPayload
 from auth.utils import decode_access_token
-from exceptions import UnauthorizedException
+from exceptions import ForbiddenException, UnauthorizedException
 from models.employee import EmployeeRole
-from exceptions import ForbiddenException
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 

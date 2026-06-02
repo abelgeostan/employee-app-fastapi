@@ -3,22 +3,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import get_current_user, require_role
 from auth.schemas import TokenPayload
+from database.connection import get_db
+from employees import service
 from employees.schemas import (
+    AddressCreate,
     AddressResponse,
     EmployeeByIdResponse,
     EmployeeCreate,
     EmployeeResponse,
+    EmployeeUpdate,
 )
-from employees.schemas import EmployeeUpdate
-from employees import service
-from database.connection import get_db
 from models.employee import EmployeeRole
 
-
 router = APIRouter(prefix="/employee", tags=["Employees"])
-
-
-"""fix the post"""
 
 
 @router.post(
@@ -54,6 +51,16 @@ async def update_employee(
 async def delete_by_id(id: int, db: AsyncSession = Depends(get_db)):
     employee = await service.delete(db, id)
     return {"message": f"Employee {id} ({employee.name}) marked as deleted."}
+
+
+@router.get("/search")
+async def search_employees(
+    name: str | None = None,
+    db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
+):
+    employees = await service.search_employees(db, name)
+    return employees
 
 
 @router.get("/{id}", response_model=EmployeeByIdResponse)
@@ -99,6 +106,12 @@ async def delete_address(
     return address
 
 
-"""GET ALL"""
-
-"""do search ....search?name=x .......query param"""
+@router.put("/{emp_id}/adresses", response_model=EmployeeByIdResponse)
+async def add_address(
+    addr: AddressCreate,
+    emp_id: int,
+    db: AsyncSession = Depends(get_db),
+    _current_user: TokenPayload = Depends(get_current_user),
+):
+    employee = await service.add_address(db, emp_id, addr)
+    return employee

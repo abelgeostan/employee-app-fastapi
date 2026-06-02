@@ -1,13 +1,13 @@
 from fastapi import HTTPException, status
-from models.address import Address
-from employees.schemas import EmployeeCreate
-from exceptions import ConflictException, NotFoundException
-from employees import repo
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.employee import Employee
-from employees.schemas import EmployeeUpdate
+
 from auth.utils import hash_password
 from department import repo as deptrepo
+from employees import repo
+from employees.schemas import AddressCreate, EmployeeCreate, EmployeeUpdate
+from exceptions import ConflictException, NotFoundException
+from models.address import Address
+from models.employee import Employee
 
 """fix create post"""
 
@@ -133,3 +133,26 @@ async def delete_address(db: AsyncSession, emp_id: int, addr_id: int):
         )
     address = await repo.delete_address(db, address)
     return address
+
+
+async def search_employees(db: AsyncSession, name: str | None = None):
+    employees = await repo.get_all(db)
+    if name:
+        name = name.strip().lower()
+        employees = [emp for emp in employees if name in emp.name.lower()]
+    return employees
+
+
+async def add_address(db: AsyncSession, emp_id: int, addr: AddressCreate):
+    employee = await repo.get_by_id(db, emp_id)
+    if not employee:
+        raise NotFoundException(detail=f"Employee {emp_id} not found")
+    address = Address(
+        line1=addr.line1,
+        city=addr.city,
+        postal_code=addr.postal_code,
+        country=addr.country,
+    )
+    employee.addresses.append(address)
+    await repo.update(db, employee)
+    return employee
