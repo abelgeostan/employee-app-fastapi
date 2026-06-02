@@ -13,8 +13,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 # from models.department import Department
 from models.entity import Entity
 
-# from models.address import address
-
 
 def _datetime_to_iso(value: datetime | None) -> str | None:
     if value is None:
@@ -56,12 +54,12 @@ class Employee(Entity):
         DateTime(timezone=True), nullable=True
     )
 
-    addresses: Mapped[list[Address]] = relationship(  # noqa:F821
+    addresses: Mapped[list["Address"]] = relationship(  # noqa: F821, UP037
         "Address",
         back_populates="employee",
     )
 
-    departments: Mapped[list[Department]] = relationship(  # noqa:F821
+    departments: Mapped[list["Department"]] = relationship(  # noqa: F821, UP037
         "Department",
         secondary="employee_dept",
         back_populates="employees",

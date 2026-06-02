@@ -19,4 +19,4 @@ class Address(Entity):
         nullable=False,
         index=True,
     )
-    employee: Mapped[Employee] = relationship("Employee", back_populates="addresses")  # noqa:F821
+    employee: Mapped["Employee"] = relationship("Employee", back_populates="addresses")  # noqa: F821, UP037

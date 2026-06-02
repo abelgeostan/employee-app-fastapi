@@ -31,7 +31,7 @@ class Department(Entity):
         DateTime(timezone=True), nullable=True, default=None
     )
 
-    employees: Mapped[list[Employee]] = relationship(  # noqa:F821
+    employees: Mapped[list["Employee"]] = relationship(  # noqa: F821, UP037
         "Employee",
         secondary="employee_dept",
         back_populates="departments",
